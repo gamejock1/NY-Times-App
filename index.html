@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <title>NYT APP</title>
+</head>
+
+<body style="margin:0 10%; background:url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnwyjAiGEPqR2YDmAZRjPrE83ukuX_u2mNNEHAgzO7AdIEOzFK-Q)">
+
+  <div class="jumbotron" style="background:rgb(10, 10, 65); color:white; text-align:center; box-shadow:5px 5px 15px 5px #333;">
+    <h1 style="font-family:cursive">
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> NYT APP</h1>
+  </div>
+
+
+  <div class="panel panel-default" style="box-shadow:5px 5px 15px 5px #333; border:0;">
+    <div class="panel-heading" style="background:rgb(10, 10, 65); color:white; font-family:cursive; ">
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Search Parameters</div>
+    <div class="panel-body">
+
+      <div class="form-group">
+        <label for="startYear">Historical Figure</label>
+        <input type="text" class="form-control" id="searchTerm" placeholder="John Smith">
+      </div>
+
+      <div class="form-group">
+        <label for="numberOfRecords">Number of Articles</label>
+        <select class="form-control" id="numberOfRecords">
+          <option>10</option>
+          <option>20</option>
+          <option>30</option>
+          <option>40</option>
+          <option>50</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="startYear">Minimum Year</label>
+        <input type="text" class="form-control" id="startYear" placeholder="Example: 1500">
+      </div>
+
+      <div class="form-group">
+        <label for="startYear">Maximum Year</label>
+        <input type="text" class="form-control" id="endYear" placeholder="Example: 1600">
+      </div>
+<!-- disabled="true" -->
+      <button id="search" type="button"  class="btn btn-secondary" style="background:rgb(10, 10, 65); color:white;">Search</button>
+      <button id="clear" type="button" class="btn btn-secondary" style="background:rgb(10, 10, 65); color:white;">Clear Results</button>
+
+    </div>
+  </div>
+
+  <div class="panel panel-default" style="box-shadow:5px 5px 15px 5px #333; border:0;">
+    <div style="background:rgb(10, 10, 65); color:white; font-family:cursive" class="panel-heading">
+      <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Top Articles</div>
+    <div class="panel-body" id="results">
+    </div>
+  </div>
+
+
+
+
+
+  <script>
+
+      var searchTerm = $("#searchTerm");
+      var numberOfRecords = $("#numberOfRecords");
+      var startYear = $("#startYear");
+      var endYear = $("#endYear");
+      
+      $("#clear").on("click", function() {
+        $("#results").empty();
+      });
+      
+      $("#search").on("click", function() {
+      
+        searchParameters = new Object();
+      
+        var searchTermValue = searchTerm.val();
+        console.log(searchTermValue);
+        if (searchTermValue.length > 0) {
+          searchParameters.q = searchTermValue;
+        }
+      
+        var numberOfRecordsValue = numberOfRecords.val();
+        console.log(numberOfRecordsValue);
+        if (numberOfRecordsValue.length > 0) {
+          switch (numberOfRecordsValue) {
+            case (10):
+              numberOfRecordsValue = 1;
+              break;
+            case (20):
+              numberOfRecordsValue = 2;
+              break;
+            case (30):
+              numberOfRecordsValue = 3;
+              break;
+            case (40):
+              numberOfRecordsValue = 4;
+              break;
+            case (50):
+              numberOfRecordsValue = 5;
+              break;
+            default:
+              break;
+          }
+          searchParameters.page = numberOfRecordsValue;
+        }
+      
+        var startYearValue = startYear.val();
+        console.log(startYearValue);
+        if (startYearValue.length > 0) {
+          searchParameters.begin_date = startYearValue;
+        }
+      
+        var endYearValue = endYear.val();
+        console.log(endYearValue);
+        if (endYearValue.length > 0) {
+          searchParameters.end_date = endYearValue;
+        }
+      
+      
+        var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+        url += '?' + $.param(searchParameters) + "&api-key=7f9c42b7cddf4af3bb3ccda0b4efebf0";
+      
+        console.log(url);
+      
+        $.ajax({
+          url: url,
+          method: 'GET',
+        }).done(function(result) {
+      
+          console.log(result);
+      
+        }).fail(function(err) {
+      
+          throw err;
+        });
+      
+      });
+      
+      </script>
+
+
+
+
+
+</body>
+
+</html>
